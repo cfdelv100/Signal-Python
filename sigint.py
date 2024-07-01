@@ -136,49 +136,56 @@ plt.subplot(4, 1, 4)
 plt.plot(frequencies)
 plt.title("Frequencies found")
 plt.xlim(0, 1200)
+plt.savefig('sine_wave.png')
 plt.show()
-plt.close()
+# plt.close()
+
 
 # fft of the combined noise and signal wave
 data_fft = np.fft.fft(combined_signals)
 freq = (np.abs(data_fft[:len(data_fft)]))
 
 plt.plot(freq)
-plt.title("Before Filtering: Will have main signal (1000 Hz) + noise frequency (50 Hz)")
+plt.title("(Sine) Before Filtering: Will have main signal (1000 Hz) + noise frequency (50 Hz)")
 plt.xlim(0, 1200)
-plt.close()
+plt.show()
+# plt.close()
 
 # cosine graph box
 print("The frequency is {} Hz.".format(np.argmax(frequencies2)))
-plt.subplot(4, 1, 1)
+plt.subplot(3, 1, 1)
 plt.plot(data2[:300])
 plt.title("Original Cosine Wave")
 plt.subplots_adjust(hspace=5)
 plt.plot(cos_wave[:500])
 
-plt.subplot(4, 1, 2)
+plt.subplot(3, 1, 2)
 plt.title("Noisy Cosine Wave")
 plt.plot(cos_noise[:4000])
 
-plt.subplot(4, 1, 3)
+plt.subplot(3, 1, 3)
 plt.title("Combined Cosine Wave")
 plt.plot(combined_cos_signal[:3000])
 
-plt.subplot(4, 1, 4)
+
 plt.plot(frequencies2)
 plt.title("Frequencies Found")
 plt.xlim(0, 1200)
+plt.show()
+plt.savefig('combined_cosine.png')
+
 
 # combined fft of the combined cosine and wave
 data_fft2 = np.fft.fft(combined_cos_signal)
 freq2 = (np.abs(data_fft2[:len(data_fft2)]))
-
+plt.subplot(1, 1, 1)
 plt.plot(freq2)
-plt.title("Number of Frequencies")
+plt.title("Number of Frequencies(Cosine)")
 plt.xlim(0, 1200)
-
+plt.savefig('cosine_wave')
 plt.show()
-plt.close()
+# plt.close()
+
 
 
 
@@ -201,12 +208,14 @@ index += 1
 plt.plot(filtered_freq)
 plt.title("Before filtering: Will have main signal (1000Hz) + noise frequency (50Hz)")
 plt.xlim(0, 1200)
+plt.savefig('before_filtering.png')
 plt.show()
 
+# plt.close()
 
 recovered_signal = np.fft.ifft(filtered_freq)
 plt.subplot(3, 1, 1)
-plt.title("Original Sine Wave")
+plt.title("Original Sine Wave Before Clean-up")
 plt.subplots_adjust(hspace=5)
 plt.plot(sine_wave[:500])
 
@@ -217,6 +226,7 @@ plt.plot(combined_signals[:4000])
 plt.subplot(3, 1, 3)
 plt.title("Sine wave after clean up")
 plt.plot((recovered_signal[:500]))
+plt.savefig('noisy_sine.png')
 plt.show()
-
 plt.close()
+
