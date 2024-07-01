@@ -10,9 +10,10 @@ import plotly.graph_objects as go
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output
 import dash_auth
+import mpld3
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True,
-                meta_tags=[{'signal':'viewport',
+                meta_tags=[{'signal': 'viewport',
                             'content': 'width=device-width, initial-scale=1.0'}]
                 )
 
@@ -36,26 +37,24 @@ file = "test.wav"
 file2 = "test2.wav"
 
 # setting up sine wave in a list
-sine_wave = [np.sin(2 * np.pi * frequency * x/sampling_rate) for x in range(num_samples)]
+sine_wave = [np.sin(2 * np.pi * frequency * x / sampling_rate) for x in range(num_samples)]
 sine_wave = np.array(sine_wave)
 
 # setting up sine wave noise
-sine_noise = [np.sin(2 * np.pi * noisy_freq * x1/sampling_rate) for x1 in range(num_samples)]
+sine_noise = [np.sin(2 * np.pi * noisy_freq * x1 / sampling_rate) for x1 in range(num_samples)]
 sine_noise = np.array(sine_noise)
 
 # setting up a cosine wave in a list
-cos_wave = [np.cos(2 * np.pi * frequency * x/sampling_rate) for x in range(num_samples)]
+cos_wave = [np.cos(2 * np.pi * frequency * x / sampling_rate) for x in range(num_samples)]
 cos_wave = np.array(cos_wave)
 
 # setting up a cosine wave noise
-cos_noise = [np.cos(2 * np.pi * frequency * x/sampling_rate) for x in range(num_samples)]
+cos_noise = [np.cos(2 * np.pi * frequency * x / sampling_rate) for x in range(num_samples)]
 cos_noise = np.array(cos_noise)
-
 
 # combining the signals
 combined_signals = sine_wave + sine_noise
 combined_cos_signal = cos_wave + cos_noise
-
 
 nframes = num_samples
 comptype = "NONE"
@@ -107,7 +106,6 @@ data_fft = np.fft.fft(data)
 data2 = np.array(data2)
 data_fft2 = np.fft.fft(data2)
 
-
 # generate real numbers of the data
 frequencies = np.abs(data_fft)
 
@@ -116,6 +114,10 @@ frequencies2 = np.abs(data_fft2)
 
 # print the array element with the highest value
 print("The frequency is {} Hz.".format(np.argmax(frequencies)))
+
+# set the size of the matplotlib canvas, displays into index.html
+fig1 = plt.figure(figsize=(19, 9))
+
 
 # set up plots for the wave
 plt.subplot(4, 1, 1)
@@ -136,10 +138,13 @@ plt.subplot(4, 1, 4)
 plt.plot(frequencies)
 plt.title("Frequencies found")
 plt.xlim(0, 1200)
+
 plt.savefig('sine_wave.png')
 plt.show()
 # plt.close()
 
+# display into index.html
+fig2 = plt.figure(figsize=(19, 9))
 
 # fft of the combined noise and signal wave
 data_fft = np.fft.fft(combined_signals)
@@ -150,6 +155,9 @@ plt.title("(Sine) Before Filtering: Will have main signal (1000 Hz) + noise freq
 plt.xlim(0, 1200)
 plt.show()
 # plt.close()
+
+# display into index.html
+fig3 = plt.figure(figsize=(19, 9))
 
 # cosine graph box
 print("The frequency is {} Hz.".format(np.argmax(frequencies2)))
@@ -167,13 +175,11 @@ plt.subplot(3, 1, 3)
 plt.title("Combined Cosine Wave")
 plt.plot(combined_cos_signal[:3000])
 
-
 plt.plot(frequencies2)
 plt.title("Frequencies Found")
 plt.xlim(0, 1200)
 plt.show()
 plt.savefig('combined_cosine.png')
-
 
 # combined fft of the combined cosine and wave
 data_fft2 = np.fft.fft(combined_cos_signal)
@@ -186,8 +192,8 @@ plt.savefig('cosine_wave')
 plt.show()
 # plt.close()
 
-
-
+# display into index.html
+fig4 = plt.figure(figsize=(19, 9))
 
 # filtering
 filtered_freq = []
@@ -212,6 +218,8 @@ plt.savefig('before_filtering.png')
 plt.show()
 
 # plt.close()
+# display into index.html
+fig5 = plt.figure(figsize=(19, 9))
 
 recovered_signal = np.fft.ifft(filtered_freq)
 plt.subplot(3, 1, 1)
@@ -229,4 +237,21 @@ plt.plot((recovered_signal[:500]))
 plt.savefig('noisy_sine.png')
 plt.show()
 plt.close()
+
+# figures to html file
+html_str1 = mpld3.fig_to_html(fig1)
+html_str2 = mpld3.fig_to_html(fig2)
+html_str3 = mpld3.fig_to_html(fig3)
+html_str4 = mpld3.fig_to_html(fig4)
+html_str5 = mpld3.fig_to_html(fig5)
+
+# write into index.html
+Html_file = open("index.html", "w")
+Html_file.write(html_str1)
+Html_file.write(html_str2)
+Html_file.write(html_str3)
+Html_file.write(html_str4)
+Html_file.write(html_str5)
+Html_file.close()
+
 
