@@ -11,6 +11,7 @@ from dash import Dash, html, dcc
 from dash.dependencies import Input, Output
 import dash_auth
 import mpld3
+import webbrowser
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True,
                 meta_tags=[{'signal': 'viewport',
@@ -140,7 +141,7 @@ plt.title("Frequencies found")
 plt.xlim(0, 1200)
 
 plt.savefig('sine_wave.png')
-plt.show()
+# plt.show()
 # plt.close()
 
 # display into index.html
@@ -153,7 +154,7 @@ freq = (np.abs(data_fft[:len(data_fft)]))
 plt.plot(freq)
 plt.title("(Sine) Before Filtering: Will have main signal (1000 Hz) + noise frequency (50 Hz)")
 plt.xlim(0, 1200)
-plt.show()
+# plt.show()
 # plt.close()
 
 # display into index.html
@@ -178,7 +179,7 @@ plt.plot(combined_cos_signal[:3000])
 plt.plot(frequencies2)
 plt.title("Frequencies Found")
 plt.xlim(0, 1200)
-plt.show()
+# plt.show()
 plt.savefig('combined_cosine.png')
 
 # combined fft of the combined cosine and wave
@@ -189,7 +190,7 @@ plt.plot(freq2)
 plt.title("Number of Frequencies(Cosine)")
 plt.xlim(0, 1200)
 plt.savefig('cosine_wave')
-plt.show()
+# plt.show()
 # plt.close()
 
 # display into index.html
@@ -215,7 +216,7 @@ plt.plot(filtered_freq)
 plt.title("Before filtering: Will have main signal (1000Hz) + noise frequency (50Hz)")
 plt.xlim(0, 1200)
 plt.savefig('before_filtering.png')
-plt.show()
+# plt.show()
 
 # plt.close()
 # display into index.html
@@ -235,7 +236,7 @@ plt.subplot(3, 1, 3)
 plt.title("Sine wave after clean up")
 plt.plot((recovered_signal[:500]))
 plt.savefig('noisy_sine.png')
-plt.show()
+# plt.show()
 plt.close()
 
 # figures to html file
@@ -254,4 +255,6 @@ Html_file.write(html_str4)
 Html_file.write(html_str5)
 Html_file.close()
 
+file_path = 'index.html'
+webbrowser.open_new_tab(file_path)
 
